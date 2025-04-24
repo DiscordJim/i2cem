@@ -1,6 +1,17 @@
 # I2CEM
 Emulates various communication protocols like I2C.
 
+## I2C
+The I2C implementation is based on the description provided within the BMI270 manual. The protocol is executed as described below. `[]` will indicate something sent by the master and `()` denotes something sent by the slave. `||` will indicate the line condition will the following meanings:
+- `| Sr |` start
+- `| St |` stop
+Additionally, `[ X ]` represents a 'do-not-care' bit.
+
+### Writes
+```
+| Sr |[ Slave Addr (7 bits) ][ R/W Bit = 0 ]( ACK = 0 )[ X ][ Reg Addr (7bits) ]( ACK = 0 )[ Data (8 bits) ]( ACK = 0 )| St |
+```
+
 
 ## I2C Example
 ```rust
@@ -25,8 +36,6 @@ master.add_device(slave);
 
 let fst = master.read_block(0x68, 0x22, 1)[0];
 let snd = master.read_block(0x68, 0x23, 1)[0];
-// assert_eq!(&*values, [0x21, 0x22]);
-
 
 let reconstructed = ((snd as u16) | ((fst as u16) << 8)) as f32 / 10000.0;
 
