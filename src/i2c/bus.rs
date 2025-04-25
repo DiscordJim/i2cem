@@ -1,4 +1,6 @@
-use crate::device::I2CSlave;
+use super::I2CSlave;
+
+
 
 #[derive(Clone, Copy, PartialEq, Eq, Debug)]
 pub enum LineCondition {

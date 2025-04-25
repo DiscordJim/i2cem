@@ -1,4 +1,7 @@
-use crate::{bus::{I2CBus, LineCondition}, device::I2CSlave};
+use crate::i2c::LineCondition;
+
+use super::{I2CBus, I2CSlave};
+
 
 pub struct Master {
     bus: I2CBus
@@ -18,10 +21,10 @@ impl Master {
         assert!(device_addr & 0x80 == 0, "Only 7-bit addressing is supported.");
         assert!(reg_addr & 0x80 == 0, "Only 7-bit addressing is supported.");
         // [ Slave Addr (7-bit) ] [ R/W bit = 0 ]
-        self.bus.write_byte(device_addr << 1, crate::bus::LineCondition::Start);
+        self.bus.write_byte(device_addr << 1, LineCondition::Start);
         
         // [ Register addr (7-bit) ]
-        self.bus.write_byte(reg_addr, crate::bus::LineCondition::InProgress);
+        self.bus.write_byte(reg_addr, LineCondition::InProgress);
         
 
 
@@ -29,9 +32,9 @@ impl Master {
         while i >= 0 {
 
             if i == 0 {
-                self.bus.write_byte(bytes[i as usize], crate::bus::LineCondition::Stop);
+                self.bus.write_byte(bytes[i as usize], LineCondition::Stop);
             } else {
-                self.bus.write_byte(bytes[i as usize], crate::bus::LineCondition::InProgress);
+                self.bus.write_byte(bytes[i as usize], LineCondition::InProgress);
             }
             i -= 1;
         }
@@ -48,24 +51,24 @@ impl Master {
         assert!(device_addr & 0x80 == 0, "Only 7-bit addressing is supported.");
         assert!(reg_addr & 0x80 == 0, "Only 7-bit addressing is supported.");
         // [ Slave Addr (7-bit) ] [ R/W bit = 0 ]
-        self.bus.write_byte(device_addr << 1, crate::bus::LineCondition::Start);
+        self.bus.write_byte(device_addr << 1, LineCondition::Start);
         
 
         // println!("ODNE");
 
         // [ 0 bit ] [ Register addr (7-bit) ]
-        self.bus.write_byte(reg_addr, crate::bus::LineCondition::InProgress);
+        self.bus.write_byte(reg_addr, LineCondition::InProgress);
         
 
         // [ Slave Addr (7-bit) ] [ R/W bit = 1 ]
-        self.bus.write_byte((device_addr << 1) | 0x01, crate::bus::LineCondition::Start);
+        self.bus.write_byte((device_addr << 1) | 0x01, LineCondition::Start);
 
         let mut result = vec![];
         for i in 0..bytes {
             result.push(self.bus.read_byte().unwrap());
             if i >= bytes - 1 {
                 // We are done.
-                self.bus.write_bit(true, crate::bus::LineCondition::Stop);
+                self.bus.write_bit(true, LineCondition::Stop);
             } else {
                 // More data.
                 self.bus.write_bit(false, LineCondition::InProgress);

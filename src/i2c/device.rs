@@ -2,7 +2,10 @@ use std::collections::HashMap;
 
 use bitvec::{array::BitArray, field::BitField, order::Msb0, vec::BitVec};
 
-use crate::{bus::LineCondition, register::Register, wire::{byte_to_bits, Port}};
+use crate::core::{byte_to_bits, Port, Register};
+
+use super::LineCondition;
+
 
 
 #[derive(Clone, Copy, Debug)]

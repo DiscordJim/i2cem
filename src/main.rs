@@ -1,6 +1,5 @@
 use bitvec::{order::Msb0, vec::BitVec};
-use i2cem::{bus::LineCondition, device::I2CSlave, master::Master, register::Register};
-
+use i2cem::{core::Register, i2c::{I2CSlave, Master}};
 
 
 fn main() {

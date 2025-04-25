@@ -1,4 +1,5 @@
-use crate::wire::{byte_to_bits, Port};
+use super::{byte_to_bits, Port};
+
 
 pub struct Register {
     buffer: Port,

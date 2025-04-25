@@ -1,16 +1,13 @@
-pub mod wire;
-pub mod device;
 
-pub mod register;
-pub mod master;
-pub mod bus;
+pub mod core;
+pub mod i2c;
 
 
 #[cfg(test)]
 mod tests {
     use rand::random;
 
-    use crate::{device::I2CSlave, master::Master, register::Register};
+    use crate::{core::Register, i2c::{I2CSlave, Master}};
 
 
     #[test]
