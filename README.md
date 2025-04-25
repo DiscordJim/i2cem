@@ -12,6 +12,13 @@ Additionally, `[ X ]` represents a 'do-not-care' bit.
 | Sr |[ Slave Addr (7 bits) ][ R/W Bit = 0 ]( ACK = 0 )[ X ][ Reg Addr (7bits) ]( ACK = 0 )[ Data (8 bits) ]( ACK = 0 )| St |
 ```
 
+### Reads
+```
+| Sr | [ Slav Addr (7 bits) ] [ R/W bit = 0 ] ( ACK = 0 )
+
+| Sr | [ Slave Addr (7 bits) ] [ R/W bit = 1 ] ( Byte ) [ ACK = 0 ] ... ( Byte )[ NACK = 1 ] | St|
+```
+
 
 ## I2C Example
 ```rust
