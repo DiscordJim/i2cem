@@ -79,3 +79,10 @@ impl Master {
         result
     }
 }
+
+
+impl Default for Master {
+    fn default() -> Self {
+        Self::new()
+    }
+}

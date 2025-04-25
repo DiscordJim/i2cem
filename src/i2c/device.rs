@@ -1,9 +1,5 @@
 use std::collections::HashMap;
-
-use bitvec::{array::BitArray, field::BitField, order::Msb0, vec::BitVec};
-
 use crate::core::{byte_to_bits, Port, Register};
-
 use super::LineCondition;
 
 
@@ -17,7 +13,6 @@ pub enum SlaveState {
     StartRead,
     StartWrite,
     WaitingAckRead
-    // ReadAddressWaitAck
 }
 
 pub struct I2CSlave {
@@ -190,30 +185,6 @@ impl I2CSlave {
 
             }
         }
-      
-        // match self.state { 
-        //     SlaveState::Idle => {
- 
-        //         let address = (val & (!0x01)) >> 1;
-        //         if address != self.address {
-        //             return; // ignore communication
-        //         }
-
-        //         let write: bool = val & 0x01 == 1;
-        //         if write {
-
-        //         } else {
-                    
-        //             self.state = SlaveState::ReadAddress;
-        //             self.output.push(false);
-        //         }
-        //     },
-        //     // SlaveState::ReadAddress => {
-        //     //     let register_address = val & (!0x80);
-        //     // }
-            
-            
-        // }
     }
     
     pub fn read_bit(&mut self) -> Option<bool> {

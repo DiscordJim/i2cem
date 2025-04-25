@@ -6,3 +6,4 @@ edition = "2024"
 [dependencies]
 bitvec = "1.0.1"
 rand = "0.9.1"
+rsevents = "0.3.1"

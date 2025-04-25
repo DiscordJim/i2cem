@@ -19,12 +19,15 @@ impl Register {
         }
     }
     pub fn new_writeable() -> Self {
-        Self {
+        let mut value = Self {
             buffer: Port::new(),
             populator: None,
             read_only: false,
             backing: Port::new()
-        }
+        };
+        value.backing.write_byte(0x00);
+        value.refill_buffers();
+        value
     }
     pub fn start_write(&mut self) {
         if self.read_only {
@@ -32,6 +35,9 @@ impl Register {
         }
         self.buffer.clear();
         self.backing.clear();
+    }
+    pub fn is_done(&self) -> bool {
+        self.buffer.bits_read() == 0
     }
     pub fn write_byte(&mut self, value: u8) {
         for bit in byte_to_bits(value) {
@@ -55,6 +61,14 @@ impl Register {
             }
         }
     }
+    pub fn read_bit(&mut self) -> Option<bool> {
+        if self.buffer.bits_read() == 0 {
+            // If the buffer is empty we just send 0x00.
+            None
+        } else {
+            self.buffer.read()
+        }
+    } 
     pub fn read_byte(&mut self) -> Option<u8> {
         if self.buffer.bits_read() == 0 {
             // If the buffer is empty we just send 0x00.

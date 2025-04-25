@@ -72,3 +72,9 @@ impl I2CBus {
 
     }
 }
+
+impl Default for I2CBus {
+    fn default() -> Self {
+        Self::new()
+    }
+}

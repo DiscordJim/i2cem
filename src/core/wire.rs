@@ -1,8 +1,8 @@
-use std::collections::VecDeque;
-
-use bitvec::{field::BitField, order::{Lsb0, Msb0}, vec::BitVec};
 
 
+use bitvec::{field::BitField, order::Msb0, vec::BitVec};
+
+#[derive(Debug)]
 pub struct Port {
     buffer: BitVec
 }
@@ -13,6 +13,12 @@ impl Port {
             buffer: BitVec::default()
         }
     }
+    pub fn from_byte(value: u8) -> Self {
+        let mut obj = Self::new();
+        obj.write_byte(value);
+        obj
+    }
+    
     pub fn read_byte(&mut self) -> Option<u8> {
         if self.buffer.is_empty() {
             return None;
@@ -46,6 +52,12 @@ impl Port {
 
 pub fn byte_to_bits(val: u8) -> BitVec<u8, Msb0> {
     BitVec::<u8, Msb0>::from_element(val)
+}
+
+impl Default for Port {
+    fn default() -> Self {
+        Self::new()
+    }
 }
 
 #[cfg(test)]

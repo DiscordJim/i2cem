@@ -1,13 +1,13 @@
 
 pub mod core;
 pub mod i2c;
+pub mod spi;
 
 
 #[cfg(test)]
 mod tests {
-    use rand::random;
-
-    use crate::{core::Register, i2c::{I2CSlave, Master}};
+    use std::{collections::HashMap, time::Duration};
+    use crate::{core::Register, i2c::{I2CSlave, Master}, spi::{master::{Disconnected, SpiMaster}, slave::SpiSlave}};
 
 
     #[test]
@@ -108,5 +108,40 @@ mod tests {
     
 
     
+    }
+
+
+    #[test]
+    pub fn basic_spi_write() {
+        let master: SpiMaster<Disconnected> = SpiMaster::new();
+        let slave: SpiSlave<Disconnected> = SpiSlave::new(HashMap::from([
+            (0x15, Register::new_writeable())
+        ]));
+
+        let (master, _) = master.connect(slave, Duration::from_millis(1));
+
+        master.write_register(0x15, vec![ 0x21 ]);
+        assert_eq!(master.read_register(0x15, 1), vec![ 0x21 ]);
+
+    }
+
+    #[test]
+    pub fn basic_spi_write_readonly_register() {
+
+        fn reg_fn() -> Vec<u8> {
+            vec![ 0x21, 0x59 ]
+        }
+
+        let master: SpiMaster<Disconnected> = SpiMaster::new();
+        let slave: SpiSlave<Disconnected> = SpiSlave::new(HashMap::from([
+            (0x15, Register::new_read_only(reg_fn))
+        ]));
+
+        
+
+        let (master, _) = master.connect(slave, Duration::from_millis(1));
+
+        assert_eq!(master.read_register(0x15, 2), vec![ 0x21, 0x59 ]);
+
     }
 }

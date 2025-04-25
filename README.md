@@ -49,3 +49,18 @@ let reconstructed = ((snd as u16) | ((fst as u16) << 8)) as f32 / 10000.0;
 assert_eq!(reconstructed, REAL_TEMP);
 
 ```
+
+## SPI Example
+```rust
+let master = SpiMaster::new();
+let slave = SpiSlave::new(HashMap::from([(0xF, Register::new_writeable())]));
+
+let (master, _slave): (SpiMaster<Connected>, SpiSlave<Connected>) =
+    master.connect(slave, Duration::from_millis(5));
+
+master.write_register(0xF, vec![0x21]);
+
+assert_eq!(master.read_register(0xF, 1), vec![ 0x21 ]);
+
+let master: SpiMaster<Disconnected> = master.disconnect();
+```
